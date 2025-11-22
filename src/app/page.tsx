@@ -4,7 +4,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { placeholderProducts } from '@/lib/placeholder-data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { ArrowRight, Hammer, Brush, Ruler } from 'lucide-react';
 import { useCollection, useMemoFirebase } from '@/firebase';
@@ -128,7 +127,7 @@ export default function Home() {
                       <h3 className="text-xl font-headline font-semibold">{product.name}</h3>
                       <p className="mt-2 text-muted-foreground text-sm">{product.description}</p>
                       <div className="mt-4 flex justify-between items-center">
-                        <p className="text-lg font-bold text-primary">${product.price.toFixed(2)}</p>
+                        {product.price && <p className="text-lg font-bold text-primary">${product.price.toFixed(2)}</p>}
                         <Button asChild variant="outline">
                           <Link href={`/products`}>View Details</Link>
                         </Button>

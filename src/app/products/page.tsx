@@ -45,7 +45,7 @@ function ProductCard({ product }: { product: Product }) {
           <h3 className="text-xl font-headline font-semibold">{product.name}</h3>
           <p className="mt-2 text-muted-foreground text-sm flex-grow">{product.description}</p>
           <div className="mt-4 flex justify-between items-center">
-            <p className="text-lg font-bold text-primary">${product.price.toFixed(2)}</p>
+            {product.price && <p className="text-lg font-bold text-primary">${product.price.toFixed(2)}</p>}
             <Button onClick={handleAddToCart}>Add to Cart</Button>
           </div>
         </div>
