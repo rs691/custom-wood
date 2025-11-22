@@ -1,0 +1,146 @@
+/**
+ * This ruleset enforces a security model with two primary patterns:
+ * 1. Strict user-ownership for personal data.
+ * 2. Public read access with administrator-only writes for shared content.
+ *
+ * Core Philosophy:
+ * The rules are designed to be secure by default. Access is denied unless explicitly
+ * granted. User data is treated as private and isolated, while application content
+ * like products and events is publicly visible to all users, including those not
+ * signed in.
+ *
+ * Data Structure:
+ * The data is organized into flat, top-level collections:
+ * - /users/{userId}: Stores private user profile data.
+ * - /products/{productId}: Publicly visible product listings.
+ * - /projects/{projectId}: Publicly visible project showcases.
+ * - /events/{eventId}: Publicly visible event details.
+ *
+ * Key Security Decisions:
+ * - Admin Role: Write access to public collections (/products, /projects, /events)
+ *   is restricted to administrators. An admin is identified by a custom authentication
+ *   token claim (`request.auth.token.admin == true`). This claim must be set by a
+ *   trusted backend server.
+ * - User Data Privacy: A user can only access their own document within the /users
+ *   collection. Listing the entire /users collection is explicitly forbidden to
+ *   prevent user enumeration attacks.
+ * - Data Integrity: When a user document is created, its internal `id` field must
+ *   match the document's ID in the path to ensure relational consistency. This ID
+ *   is immutable and cannot be changed on update.
+ * - Prototyping Flexibility: Data schemas are not strictly enforced in this ruleset.
+ *   This allows for rapid development and API changes without needing to update
+ *   security rules for every field modification. Validation is focused solely on
+ *   authorization and relational integrity.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ----------------------------------------------------------------------
+    // Helper Functions
+    // ----------------------------------------------------------------------
+
+    /**
+     * Checks if a user is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * Checks if the requesting user is the owner of a document.
+     * @param userId The UID of the user to check against.
+     */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /**
+     * Checks if the requesting user has an admin custom claim.
+     * This claim must be set via a trusted backend process.
+     */
+    function isAdmin() {
+      return isSignedIn() && request.auth.token.admin == true;
+    }
+
+    // ----------------------------------------------------------------------
+    // Collection: users
+    // ----------------------------------------------------------------------
+
+    /**
+     * @description Controls access to user profile documents.
+     * @path /users/{userId}
+     * @allow A signed-in user (auth.uid: 'user_abc') can create, read, update, or delete their own document at /users/user_abc.
+     * @deny A user (auth.uid: 'user_xyz') is blocked from reading or writing to /users/user_abc.
+     * @deny Anonymous or authenticated users are blocked from listing all documents in the /users collection.
+     * @principle Restricts access to a user's own data tree and prevents user enumeration.
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false;
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isOwner(userId) && resource != null && request.resource.data.id == resource.data.id;
+      allow delete: if isOwner(userId) && resource != null;
+    }
+
+    // ----------------------------------------------------------------------
+    // Collection: products
+    // ----------------------------------------------------------------------
+
+    /**
+     * @description Controls access to product listings.
+     * @path /products/{productId}
+     * @allow Any user, including anonymous ones, can read (get, list) any product document.
+     * @allow An admin user (auth.token.admin == true) can create, update, or delete a product.
+     * @deny A non-admin user is blocked from creating, updating, or deleting any product.
+     * @principle Allows public read access for all, but restricts content management to privileged admin users.
+     */
+    match /products/{productId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin() && resource != null;
+      allow delete: if isAdmin() && resource != null;
+    }
+
+    // ----------------------------------------------------------------------
+    // Collection: projects
+    // ----------------------------------------------------------------------
+
+    /**
+     * @description Controls access to project showcases.
+     * @path /projects/{projectId}
+     * @allow Any user, including anonymous ones, can read (get, list) any project document.
+     * @allow An admin user (auth.token.admin == true) can create, update, or delete a project.
+     * @deny A non-admin user is blocked from creating, updating, or deleting any project.
+     * @principle Allows public read access for all, but restricts content management to privileged admin users.
+     */
+    match /projects/{projectId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin() && resource != null;
+      allow delete: if isAdmin() && resource != null;
+    }
+
+    // ----------------------------------------------------------------------
+    // Collection: events
+    // ----------------------------------------------------------------------
+
+    /**
+     * @description Controls access to event details.
+     * @path /events/{eventId}
+     * @allow Any user, including anonymous ones, can read (get, list) any event document.
+     * @allow An admin user (auth.token.admin == true) can create, update, or delete an event.
+     * @deny A non-admin user is blocked from creating, updating, or deleting any event.
+     * @principle Allows public read access for all, but restricts content management to privileged admin users.
+     */
+    match /events/{eventId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin() && resource != null;
+      allow delete: if isAdmin() && resource != null;
+    }
+  }
+}
