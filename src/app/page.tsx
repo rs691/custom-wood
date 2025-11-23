@@ -105,19 +105,16 @@ export default function Home() {
             </p>
             <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {isLoading && <p>Loading...</p>}
-              {featuredProducts && featuredProducts.map((product) => {
-                const productImage = PlaceHolderImages.find(p => p.id === product.imageId);
-                return (
+              {featuredProducts && featuredProducts.map((product) => (
                 <Card key={product.id} className="overflow-hidden group transform transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
                   <CardContent className="p-0">
-                    {productImage ? (
+                    {product.imageUrl ? (
                         <div className="relative h-64 w-full">
                             <Image
-                                src={productImage.imageUrl}
+                                src={product.imageUrl}
                                 alt={product.name}
                                 fill
                                 className="object-cover"
-                                data-ai-hint={productImage.imageHint}
                             />
                         </div>
                     ): (
@@ -135,7 +132,7 @@ export default function Home() {
                     </div>
                   </CardContent>
                 </Card>
-              )})}
+              ))}
             </div>
             <div className="mt-12 text-center">
               <Button asChild size="lg">

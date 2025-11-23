@@ -9,12 +9,10 @@ import { useToast } from "@/hooks/use-toast";
 import type { Product } from "@/lib/types";
 import { useCollection, useFirestore, useMemoFirebase } from "@/firebase";
 import { collection, CollectionReference } from "firebase/firestore";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 function ProductCard({ product }: { product: Product }) {
     const { dispatch } = useCart();
     const { toast } = useToast();
-    const productImage = PlaceHolderImages.find(p => p.id === product.imageId);
 
     const handleAddToCart = () => {
         dispatch({ type: "ADD_ITEM", payload: product });
@@ -27,14 +25,13 @@ function ProductCard({ product }: { product: Product }) {
     return (
         <Card className="overflow-hidden group transform transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
             <CardContent className="p-0">
-                {productImage ? (
+                {product.imageUrl ? (
                     <div className="relative h-64 w-full">
                         <Image
-                            src={productImage.imageUrl}
+                            src={product.imageUrl}
                             alt={product.name}
                             fill
                             className="object-cover"
-                            data-ai-hint={productImage.imageHint}
                         />
                     </div>
                 ) : (
