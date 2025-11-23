@@ -1,54 +1,48 @@
+'use client';
 
-"use client";
-import Image from "next/image";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { format } from "date-fns";
-import { useCollection, useFirestore, useMemoFirebase } from "@/firebase";
-import { collection } from "firebase/firestore";
-import type { Project } from "@/lib/types";
-
+import Image from 'next/image';
+import { Card } from '@/components/ui/card';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import type { Project } from '@/lib/types';
+import { collection } from 'firebase/firestore';
 
 export default function ProjectsPage() {
-    const firestore = useFirestore();
-    const projectsCollection = useMemoFirebase(() => collection(firestore, 'projects'), [firestore]);
-    const { data: projects, isLoading } = useCollection<Project>(projectsCollection);
+  const firestore = useFirestore();
+  const projectsCollection = useMemoFirebase(() => collection(firestore, 'projects'), [firestore]);
+  const { data: projects, isLoading } = useCollection<Project>(projectsCollection);
 
   return (
     <div className="container mx-auto px-4 py-16">
       <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-headline font-bold">Our Projects</h1>
-        <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
-          A showcase of our custom work, from bespoke furniture to large-scale installations.
+        <h1 className="text-4xl font-headline tracking-tight lg:text-5xl">Project Showcase</h1>
+        <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
+          From custom kitchens to statement pieces, see how we've brought our clients' visions to life.
         </p>
       </div>
       {isLoading && <p>Loading projects...</p>}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {projects && projects.map((project) => (
-          <Card key={project.id} className="overflow-hidden group transform transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
-             {project.imageUrl ? (
-              <div className="relative h-80 w-full">
-                <Image
-                  src={project.imageUrl}
-                  alt={project.title}
-                  fill
-                  className="object-cover"
-                   sizes="(max-width: 768px) 100vw, 50vw"
-                />
-              </div>
-            ) : (
-                <div className="relative h-80 w-full bg-muted" />
-            )}
-            <CardHeader>
-              <CardTitle className="font-headline text-2xl">{project.title}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CardDescription>{project.description}</CardDescription>
-            </CardContent>
-            <CardFooter>
-                <p className="text-sm text-muted-foreground">Completed: {format(new Date(project.dateCompleted), "MMMM yyyy")}</p>
-            </CardFooter>
-          </Card>
-        ))}
+      <div className="columns-1 gap-4 sm:columns-2 lg:columns-3 [&>div:not(:first-child)]:mt-4">
+        {projects?.map((project) => {
+          return (
+            <div key={project.id} className="break-inside-avoid">
+               <Card className="overflow-hidden group">
+                {project.imageUrl && (
+                  <Image
+                    src={project.imageUrl}
+                    alt="project image"
+                    // alt={project.title}
+                    width={800}
+                    height={600}
+                    className="h-auto w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                )}
+                <div className="p-4">
+                    <h3 className="font-semibold font-headline text-lg">{project.title}</h3>
+                    <p className="text-sm text-muted-foreground">{project.description}</p>
+                </div>
+              </Card>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

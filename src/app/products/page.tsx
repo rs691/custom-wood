@@ -29,7 +29,8 @@ function ProductCard({ product }: { product: Product }) {
                     <div className="relative h-64 w-full">
                         <Image
                             src={product.imageUrl}
-                            alt={product.name}
+                            // alt={product.name}
+                            alt="product image"
                             fill
                             className="object-cover"
                         />

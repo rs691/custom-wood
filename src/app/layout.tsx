@@ -17,8 +17,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Woodify - Custom Wood Designs',
-  description: 'Crafting custom wood furniture, signs, and more.',
+  title: 'Woodify your ideas - Custom Wood Designs',
+  description: 'Crafting custom wood designs from your ideas.',
 };
 
 export default function RootLayout({
@@ -28,6 +28,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+      </head>
       <body
         className={cn(
           'min-h-screen bg-background font-body antialiased',
