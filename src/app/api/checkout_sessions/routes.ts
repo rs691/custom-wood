@@ -1,8 +1,11 @@
+
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { Product } from '@/lib/types';
 
-// Ensure the Stripe secret key is available
+// IMPORTANT: Set your Stripe secret key as an environment variable
+// in your Firebase App Hosting settings.
+// Do NOT hardcode the secret key in your source code.
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export async function POST(req: NextRequest) {
