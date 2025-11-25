@@ -22,26 +22,32 @@ export default function EventsPage() {
       </div>
       {isLoading && <p>Loading events...</p>}
       <div className="max-w-3xl mx-auto space-y-8">
-        {events && events.map((event) => (
-          <Card key={event.id} className="transition-all duration-300 hover:shadow-lg">
-            <CardHeader>
-              <CardTitle className="font-headline text-2xl">{event.title}</CardTitle>
-              <div className="flex flex-col sm:flex-row sm:items-center gap-x-4 gap-y-1 text-sm text-muted-foreground pt-2">
-                <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
-                    <span>{format(new Date(event.startTime), "MMMM d, yyyy 'at' h:mm a")}</span>
+        {events && events.map((event) => {
+          const eventDate = new Date(event.startTime);
+          const formattedDate = !isNaN(eventDate.getTime()) 
+              ? format(eventDate, "MMMM d, yyyy 'at' h:mm a")
+              : "Date not available";
+
+          return (
+            <Card key={event.id} className="transition-all duration-300 hover:shadow-lg">
+                <CardHeader>
+                <CardTitle className="font-headline text-2xl">{event.title}</CardTitle>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-x-4 gap-y-1 text-sm text-muted-foreground pt-2">
+                    <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4" />
+                        <span>{formattedDate}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4" />
+                        <span>{event.location}</span>
+                    </div>
                 </div>
-                <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4" />
-                    <span>{event.location}</span>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <CardDescription>{event.description}</CardDescription>
-            </CardContent>
-          </Card>
-        ))}
+                </CardHeader>
+                <CardContent>
+                <CardDescription>{event.description}</CardDescription>
+                </CardContent>
+            </Card>
+        )})}
       </div>
     </div>
   );
