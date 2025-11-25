@@ -142,7 +142,9 @@ export default function Home() {
                         <h3 className="text-xl font-headline font-semibold">{product.name}</h3>
                         <p className="mt-2 text-muted-foreground text-sm h-10 overflow-hidden">{product.description}</p>
                         <div className="mt-4 flex justify-between items-center">
-                          {product.price && <p className="text-lg font-bold text-primary">${product.price.toFixed(2)}</p>}
+                          {product.price && typeof product.price === 'number' ? (
+                            <p className="text-lg font-bold text-primary">${product.price.toFixed(2)}</p>
+                           ) : <p className="text-lg font-bold text-primary">$0.00</p>}
                           <Button asChild variant="outline">
                             <Link href={`/products`}>View Details</Link>
                           </Button>
