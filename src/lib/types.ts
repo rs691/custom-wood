@@ -58,4 +58,8 @@ export type Wood = {
     properties: string[];
 }
 
+<<<<<<< HEAD
 export type AppUser = FirebaseUser & UserProfile;
+=======
+export type AppUser = FirebaseUser & UserProfile;
+>>>>>>> bce9c6f5d1909e58b85cce49eda75ba8e3b81ca4

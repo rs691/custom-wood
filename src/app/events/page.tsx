@@ -25,11 +25,11 @@ export default function EventsPage() {
         {events && events.map((event) => (
           <Card key={event.id} className="transition-all duration-300 hover:shadow-lg">
             <CardHeader>
-              <CardTitle className="font-headline text-2xl">{event.name}</CardTitle>
+              <CardTitle className="font-headline text-2xl">{event.title}</CardTitle>
               <div className="flex flex-col sm:flex-row sm:items-center gap-x-4 gap-y-1 text-sm text-muted-foreground pt-2">
                 <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4" />
-                    <span>{format(new Date(event.date), "MMMM d, yyyy 'at' h:mm a")}</span>
+                    <span>{format(new Date(event.startTime), "MMMM d, yyyy 'at' h:mm a")}</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <MapPin className="w-4 h-4" />
