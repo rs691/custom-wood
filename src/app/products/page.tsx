@@ -1,14 +1,14 @@
 
 "use client";
 
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useCollection, useFirestore, useMemoFirebase } from "@/firebase";
 import { useCart } from "@/hooks/use-cart";
 import { useToast } from "@/hooks/use-toast";
 import type { Product } from "@/lib/types";
-import { useCollection, useFirestore, useMemoFirebase } from "@/firebase";
-import { collection, CollectionReference } from "firebase/firestore";
+import { collection } from "firebase/firestore";
+import Image from "next/image";
 
 function ProductCard({ product }: { product: Product }) {
     const { dispatch } = useCart();
