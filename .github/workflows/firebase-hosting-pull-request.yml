@@ -33,9 +33,8 @@ jobs:
 
 
       - name: Deploy to Firebase App Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
+        uses: firebase/actions/setup-app-hosting@v0
         with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          projectId: ${{ vars.FIREBASE_PROJECT_ID }}
-          channelId: live
+          repo: ${{ github.repository }}
+          project_id: ${{ vars.FIREBASE_PROJECT_ID }}
+          service_account: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}

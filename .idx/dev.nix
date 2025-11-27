@@ -9,7 +9,10 @@
     pkgs.zulu
   ];
   # Sets environment variables in the workspace
-  env = {};
+  env = {
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY = "pk_live_51RaC5TBupTZFq50QLX9dv4GHJi5qamB7ftmbAGR3KLBn5RGHZcuhDJ0jODx7SwAXBHt7FswfJqFSyZdNk79v6hoR00KTNA2USO";
+    STRIPE_SECRET_KEY = "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";
+  };
   # This adds a file watcher to startup the firebase emulators. The emulators will only start if
   # a firebase.json file is written into the user's directory
   services.firebase.emulators = {
@@ -35,7 +38,7 @@
       enable = true;
       previews = {
         web = {
-          command = ["npm" "run" "dev" "--" "--port" "$PORT" "--hostname" "0.0.0.0"];
+          command = ["npm" "run" "dev" "--" "--port" "$PORT" "--hostname" "0.0.0.0" "--disable-host-check"];
           manager = "web";
         };
       };
